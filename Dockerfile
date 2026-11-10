@@ -1,17 +1,12 @@
 FROM debian:13
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
     PORT=10000
 
 WORKDIR /app
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      python3 \
-      python3-venv \
-      python3-pip \
       bash \
       sudo \
       ca-certificates \
@@ -52,6 +47,7 @@ RUN apt-get update && \
       logrotate \
       gnupg \
       openssl \
+      python3 \
       qemu-system-x86 \
       qemu-system-arm \
       qemu-utils \
@@ -61,14 +57,7 @@ RUN apt-get update && \
 # sshx डाउनलोड और इंस्टॉल करना
 RUN curl -sSf https://sshx.io/get | sh
 
-COPY requirements.txt /app/requirements.txt
-RUN python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --no-cache-dir -r /app/requirements.txt
-
-COPY server.py /app/server.py
 COPY start.sh /app/start.sh
-COPY static /app/static
-
 RUN chmod +x /app/start.sh
 
 EXPOSE 10000
