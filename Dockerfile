@@ -3,8 +3,7 @@ FROM debian:13
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PORT=10000 \
-    CONSOLE_TOKEN=change-me
+    PORT=10000
 
 WORKDIR /app
 
@@ -19,7 +18,6 @@ RUN apt-get update && \
       curl \
       wget \
       git \
-      openssh-client \
       rsync \
       nano \
       vim \
@@ -54,11 +52,14 @@ RUN apt-get update && \
       logrotate \
       gnupg \
       openssl \
-      systemd \
-      systemd-sysv \
-      dbus \
-      dbus-user-session \
+      qemu-system-x86 \
+      qemu-system-arm \
+      qemu-utils \
+      ovmf \
     && rm -rf /var/lib/apt/lists/*
+
+# sshx डाउनलोड और इंस्टॉल करना
+RUN curl -sSf https://sshx.io/get | sh
 
 COPY requirements.txt /app/requirements.txt
 RUN python3 -m venv /opt/venv && \
