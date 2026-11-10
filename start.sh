@@ -1,14 +1,19 @@
 #!/bin/bash
-set -e
 
-PORT="${PORT:-10000}"
-CONSOLE_TOKEN="${CONSOLE_TOKEN:-}"
+echo "=========================================="
+echo "Starting SSHX Terminal Session..."
+echo "=========================================="
 
-if [ -z "$CONSOLE_TOKEN" ] || [ "$CONSOLE_TOKEN" = "change-me" ]; then
-  echo "ERROR: Set a strong CONSOLE_TOKEN in Render Environment Variables."
-  exit 1
-fi
+# sshx को बैकग्राउंड में चलाना ताकि लिंक लॉक्स में आ जाए
+sshx &
 
-mkdir -p /run/sshd
+# sshx को इनिशियलाइज होने के लिए थोड़ा समय देना
+sleep 3
 
-exec /opt/venv/bin/uvicorn server:app --host 0.0.0.0 --port "$PORT"
+echo "=========================================="
+echo "Starting Main Web Server App..."
+echo "=========================================="
+
+# वर्चुअल एनवायरनमेंट एक्टिवेट करके Python सर्वर स्टार्ट करना
+source /opt/venv/bin/activate
+exec python3 /app/server.py
